@@ -1,0 +1,28 @@
+name: Build Easy OS ISO
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y live-build squashfs-tools xorriso grub-pc-bin grub-efi-amd64-bin mtools
+
+    - name: Build Easy OS ISO
+      run: |
+        chmod +x scripts/build.sh
+        sudo ./scripts/build.sh
+
+    - name: Upload ISO
+      uses: actions/upload-artifact@v4
+      with:
+        name: EasyOS-ISO
+        path: output/*.iso
